@@ -4,4 +4,15 @@
 
 //#import <MumbleKit.h>
 
+// MumbleKit imports come first
+
+// MumbleKit pulls in Foundation through its .pch,
+// which we don't include here.
+#import <Foundation/Foundation.h>
+
+#import <MumbleKit/MKServerPinger.h>
+
 // Our own imports here
+
+#import "Classes/MUColor.h"
+#import "Classes/MUFavouriteServer.h"

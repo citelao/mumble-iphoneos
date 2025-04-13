@@ -4,13 +4,14 @@
 
 #import "MUCountryServerListController.h"
 
+#import "Mumble-Swift.h"
+
 #import "MUDatabase.h"
 #import "MUFavouriteServer.h"
 #import "MUFavouriteServerListController.h"
 #import "MUFavouriteServerEditViewController.h"
 #import "MUServerRootViewController.h"
 #import "MUConnectionController.h"
-#import "MUServerCell.h"
 #import "MUColor.h"
 
 @interface MUCountryServerListController () <UISearchBarDelegate, UITableViewDelegate, UITableViewDataSource> {

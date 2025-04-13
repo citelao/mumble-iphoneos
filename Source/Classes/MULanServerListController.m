@@ -2,11 +2,12 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+#import "Mumble-Swift.h"
+
 #import "MULanServerListController.h"
 #import "MUServerRootViewController.h"
 #import "MUFavouriteServer.h"
 #import "MUFavouriteServerEditViewController.h"
-#import "MUServerCell.h"
 #import "MUDatabase.h"
 #import "MUFavouriteServerListController.h"
 #import "MUConnectionController.h"

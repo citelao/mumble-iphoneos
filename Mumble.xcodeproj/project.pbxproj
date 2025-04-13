@@ -10,6 +10,7 @@
 		0EEEF3B42DF1E5450042C0A8 /* libFMDB-IOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EEEF35C2DF1DC6D0042C0A8 /* libFMDB-IOS.a */; };
 		0EF3A4672DC2573900028454 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2861C2AD116BE9B5002B8514 /* AudioToolbox.framework */; };
 		0E217BE12DAB359400028D7F /* MUServerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E217BE02DAB359400028D7F /* MUServerCell.swift */; };
+		0E97B8DD2DAC4DAA00020F06 /* MUUserStateAcessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E97B8DC2DAC4DAA00020F06 /* MUUserStateAcessoryView.swift */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		2801C35B11CA9F1A00E664E8 /* MUPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2801C35A11CA9F1A00E664E8 /* MUPreferencesViewController.m */; };
 		280256381510D70D00178B08 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 280256361510D70D00178B08 /* Localizable.strings */; };
@@ -166,7 +167,6 @@
 		28F08365147F369200DC126F /* MUAudioBarViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F08364147F369200DC126F /* MUAudioBarViewCell.m */; };
 		28F79C69147966840003B8BA /* WelcomeScreenIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 28F79C68147966840003B8BA /* WelcomeScreenIcon.png */; };
 		28F79C6B147968C60003B8BA /* WelcomeScreenIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28F79C6A147968C60003B8BA /* WelcomeScreenIcon@2x.png */; };
-		28F79C70147973D60003B8BA /* MUUserStateAcessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F79C6F147973D50003B8BA /* MUUserStateAcessoryView.m */; };
 		28F79C73147991490003B8BA /* MUAccessTokenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F79C72147991480003B8BA /* MUAccessTokenViewController.m */; };
 		28F79CA11479C2180003B8BA /* BackgroundTextureBlackGradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28F79CA01479C2180003B8BA /* BackgroundTextureBlackGradient@2x.png */; };
 		28F79CA31479C23F0003B8BA /* BackgroundTextureBlackGradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 28F79CA21479C23F0003B8BA /* BackgroundTextureBlackGradient.png */; };
@@ -269,6 +269,7 @@
 		0EA3B0742DC3A75E00A69F03 /* fmdb.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = fmdb.xcodeproj; path = Dependencies/fmdb/fmdb.xcodeproj; sourceTree = "<group>"; };
 		0E217BE02DAB359400028D7F /* MUServerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUServerCell.swift; sourceTree = "<group>"; };
 		0E217BE52DAC188D00028D7F /* Mumble-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Mumble-Bridging-Header.h"; path = "Source/Mumble-Bridging-Header.h"; sourceTree = "<group>"; };
+		0E97B8DC2DAC4DAA00020F06 /* MUUserStateAcessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUUserStateAcessoryView.swift; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* Mumble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mumble.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -494,8 +495,6 @@
 		28F08364147F369200DC126F /* MUAudioBarViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUAudioBarViewCell.m; sourceTree = "<group>"; };
 		28F79C68147966840003B8BA /* WelcomeScreenIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = WelcomeScreenIcon.png; path = Resources/WelcomeScreenIcon.png; sourceTree = "<group>"; };
 		28F79C6A147968C60003B8BA /* WelcomeScreenIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "WelcomeScreenIcon@2x.png"; path = "Resources/WelcomeScreenIcon@2x.png"; sourceTree = "<group>"; };
-		28F79C6E147973D40003B8BA /* MUUserStateAcessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUUserStateAcessoryView.h; sourceTree = "<group>"; };
-		28F79C6F147973D50003B8BA /* MUUserStateAcessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUUserStateAcessoryView.m; sourceTree = "<group>"; };
 		28F79C71147991480003B8BA /* MUAccessTokenViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUAccessTokenViewController.h; sourceTree = "<group>"; };
 		28F79C72147991480003B8BA /* MUAccessTokenViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUAccessTokenViewController.m; sourceTree = "<group>"; };
 		28F79CA01479C2180003B8BA /* BackgroundTextureBlackGradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "BackgroundTextureBlackGradient@2x.png"; path = "Resources/BackgroundTextureBlackGradient@2x.png"; sourceTree = "<group>"; };
@@ -578,8 +577,7 @@
 				28BE998718CFCDE600910551 /* MUServerTableViewCell.m */,
 				28A2AEBF14788BE300F3B83F /* MUColor.h */,
 				28A2AEC014788BE300F3B83F /* MUColor.m */,
-				28F79C6E147973D40003B8BA /* MUUserStateAcessoryView.h */,
-				28F79C6F147973D50003B8BA /* MUUserStateAcessoryView.m */,
+				0E97B8DC2DAC4DAA00020F06 /* MUUserStateAcessoryView.swift */,
 				28F79C71147991480003B8BA /* MUAccessTokenViewController.h */,
 				28F79C72147991480003B8BA /* MUAccessTokenViewController.m */,
 				28F79CA41479D7E00003B8BA /* MUTableViewHeaderLabel.h */,
@@ -1275,7 +1273,6 @@
 				280D9ADA13EAFAAE003B64A0 /* MUServerRootViewController.m in Sources */,
 				283363DB13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.m in Sources */,
 				28A2AEC114788BE300F3B83F /* MUColor.m in Sources */,
-				28F79C70147973D60003B8BA /* MUUserStateAcessoryView.m in Sources */,
 				28F79C73147991490003B8BA /* MUAccessTokenViewController.m in Sources */,
 				28F79CA61479D7E80003B8BA /* MUTableViewHeaderLabel.m in Sources */,
 				28F79CA9147AB62B0003B8BA /* MUNotificationController.m in Sources */,
@@ -1308,6 +1305,7 @@
 				2813B1D115EBFDA90049A59A /* MURemoteControlPreferencesViewController.m in Sources */,
 				285D6B7116BEEFA700F239EB /* MUTextMessageProcessor.m in Sources */,
 				2846C7D616F4A09000739FD8 /* MUServerButton.m in Sources */,
+				0E97B8DD2DAC4DAA00020F06 /* MUUserStateAcessoryView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

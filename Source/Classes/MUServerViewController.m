@@ -2,8 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+#import "Mumble-Swift.h"
+
 #import "MUServerViewController.h"
-#import "MUUserStateAcessoryView.h"
 #import "MUNotificationController.h"
 #import "MUColor.h"
 #import "MUBackgroundView.h"

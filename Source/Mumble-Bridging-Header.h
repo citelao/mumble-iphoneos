@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 
 #import <MumbleKit/MKServerPinger.h>
+#import <MumbleKit/MKUser.h>
 
 // Our own imports here
 

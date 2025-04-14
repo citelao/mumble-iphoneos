@@ -2,6 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+
+#import "Mumble-Swift.h"
+
 @import CoreServices;
 @import UserNotifications;
 
@@ -9,7 +12,6 @@
 #import <MumbleKit/MKTextMessage.h>
 
 #import "MUMessagesViewController.h"
-#import "MUTextMessage.h"
 #import "MUTextMessageProcessor.h"
 #import "MUMessageBubbleTableViewCell.h"
 #import "MUMessageRecipientViewController.h"
@@ -310,7 +312,7 @@ static UIView *MUMessagesViewControllerFindUIView(UIView *rootView, NSString *pr
     MUTextMessage *txtMsg = [_msgdb messageAtIndex:[indexPath row]];
     [cell setHeading:[txtMsg heading]];
     [cell setMessage:[txtMsg message]];
-    [cell setShownImages:[txtMsg embeddedImages]];
+    [cell setShownImages:[txtMsg images]];
     [cell setDate:[txtMsg date]];
     if ([txtMsg hasAttachments]) {
         NSString *footer = nil;
@@ -323,7 +325,7 @@ static UIView *MUMessagesViewControllerFindUIView(UIView *rootView, NSString *pr
     } else {
         [cell setFooter:nil];
     }
-    [cell setRightSide:[txtMsg isSentBySelf]];
+    [cell setRightSide:[txtMsg sentBySelf]];
     [cell setSelected:NO];
     [cell setDelegate:self];
     if (@available(iOS 7, *)) {
@@ -344,7 +346,7 @@ static UIView *MUMessagesViewControllerFindUIView(UIView *rootView, NSString *pr
             footer = NSLocalizedString(@"1 attachment", nil);
         }
     }
-    return [MUMessageBubbleTableViewCell heightForCellWithHeading:[txtMsg heading] message:[txtMsg message] images:[txtMsg embeddedImages] footer:footer date:[txtMsg date]];
+    return [MUMessageBubbleTableViewCell heightForCellWithHeading:[txtMsg heading] message:[txtMsg message] images:[txtMsg images] footer:footer date:[txtMsg date]];
 }
 
 #pragma mark - UIKeyboard notifications, UIView gesture recognizer
@@ -507,11 +509,11 @@ static UIView *MUMessagesViewControllerFindUIView(UIView *rootView, NSString *pr
     MUTextMessage *txtMsg = [_msgdb messageAtIndex:[indexPath row]];
     if ([txtMsg hasAttachments]) {
         [cell setSelected:YES];
-        if ([[txtMsg embeddedLinks] count] > 0) {
-            MUMessageAttachmentViewController *attachmentViewController = [[MUMessageAttachmentViewController alloc] initWithImages:[txtMsg embeddedImages] andLinks:[txtMsg embeddedLinks]];
+        if ([[txtMsg links] count] > 0) {
+            MUMessageAttachmentViewController *attachmentViewController = [[MUMessageAttachmentViewController alloc] initWithImages:[txtMsg images] andLinks:[txtMsg links]];
             [self.navigationController pushViewController:attachmentViewController animated:YES];
         } else {
-            MUImageViewController *imgViewController = [[MUImageViewController alloc] initWithImages:[txtMsg embeddedImages]];
+            MUImageViewController *imgViewController = [[MUImageViewController alloc] initWithImages:[txtMsg images]];
             [self.navigationController pushViewController:imgViewController animated:YES];
         }
     }

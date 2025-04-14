@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 #import "MUMessageBubbleTableViewCell.h"
-#import "MUTextMessage.h"
 #import "MUColor.h"
 
 #define kBalloonWidth                190.0f

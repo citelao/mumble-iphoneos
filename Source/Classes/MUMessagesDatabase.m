@@ -2,8 +2,9 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+#import "Mumble-Swift.h"
+
 #import "MUMessagesDatabase.h"
-#import "MUTextMessage.h"
 #import "MUDataURL.h"
 
 #import <MumbleKit/MKTextMessage.h>
@@ -88,11 +89,11 @@
                     [imagesArray addObject:[UIImage imageWithData:data]];
                 }
                 txtMsg = [MUTextMessage textMessageWithHeading:[dict objectForKey:@"heading"]
-                                                    andMessage:[dict objectForKey:@"msg"]
-                                              andEmbeddedLinks:[dict objectForKey:@"links"]
-                                             andEmbeddedImages:imagesArray
-                                              andTimestampDate:[dict objectForKey:@"date"]
-                                                  isSentBySelf:[[dict objectForKey:@"selfsent"] boolValue]];
+                                                       message:[dict objectForKey:@"msg"]
+                                                 embeddedLinks:[dict objectForKey:@"links"]
+                                                embeddedImages:imagesArray
+                                                 timestampDate:[dict objectForKey:@"date"]
+                                                    sentBySelf:[[dict objectForKey:@"selfsent"] boolValue]];
                 [_msgCache setObject:txtMsg forKey:[NSNumber numberWithInteger:row+1]];
                 return txtMsg;
             }

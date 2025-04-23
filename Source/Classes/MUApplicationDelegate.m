@@ -11,7 +11,6 @@
 #import "MUConnectionController.h"
 #import "MUNotificationController.h"
 #import "MURemoteControlServer.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 #import <MumbleKit/MKAudio.h>
@@ -100,7 +99,7 @@
     UINavigationBar.appearance.barTintColor = [UIColor blackColor];
     UINavigationBar.appearance.backgroundColor = [UIColor blackColor];
     UINavigationBar.appearance.barStyle = UIBarStyleBlack;
-    
+
     // Put a background view in here, to have prettier transitions.
     [_window addSubview:[MUBackgroundView backgroundView]];
 

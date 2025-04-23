@@ -2,10 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+#import "Mumble-Swift.h"
+
 #import "MUMessageAttachmentViewController.h"
 #import "MUTableViewHeaderLabel.h"
 #import "MUImageViewController.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 @interface MUMessageAttachmentViewController () {

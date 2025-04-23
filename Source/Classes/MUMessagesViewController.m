@@ -20,7 +20,6 @@
 #import "MUMessagesDatabase.h"
 #import "MUDataURL.h"
 #import "MUColor.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 static UIView *MUMessagesViewControllerFindUIView(UIView *rootView, NSString *prefix) {
@@ -209,22 +208,22 @@ static UIView *MUMessagesViewControllerFindUIView(UIView *rootView, NSString *pr
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    
+
     [_tableView reloadData];
 }
 
 - (void)viewIsAppearing:(BOOL)animated {
     [super viewIsAppearing:animated];
-    
+
     CGFloat textBarHeight = 44;
-    
+
     UIEdgeInsets viewSafeAreaInsets = self.view.safeAreaInsets;
-    
+
     CGFloat bottomInset = viewSafeAreaInsets.bottom;
-    
+
     CGRect viewFrame = self.view.frame;
 
     CGRect tableViewFrame = CGRectMake(0, 0, viewFrame.size.width, viewFrame.size.height-textBarHeight-bottomInset);

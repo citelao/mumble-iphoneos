@@ -6,7 +6,6 @@
 #import "MUTableViewHeaderLabel.h"
 #import "MUCertificateController.h"
 #import "MUCertificateCell.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 static void ShowAlertDialog(NSString *title, NSString *msg) {

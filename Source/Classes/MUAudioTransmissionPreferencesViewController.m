@@ -7,7 +7,6 @@
 #import "MUTableViewHeaderLabel.h"
 #import "MUAudioBarViewCell.h"
 #import "MUColor.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 @interface MUAudioTransmissionPreferencesViewController () {
@@ -33,7 +32,7 @@
     [super viewWillAppear:animated];
 
     self.title = NSLocalizedString(@"Transmission", nil);
-    
+
     self.tableView.backgroundView = [MUBackgroundView backgroundView];
     
     if (@available(iOS 7, *)) {

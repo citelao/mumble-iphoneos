@@ -6,7 +6,6 @@
 #import "MUPublicServerListController.h"
 #import "MUCountryServerListController.h"
 #import "MUTableViewHeaderLabel.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 @interface MUPublicServerListController () {

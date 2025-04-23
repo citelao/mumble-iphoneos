@@ -8,7 +8,6 @@
 #import "MUAudioQualityPreferencesViewController.h"
 #import "MUAudioSidetonePreferencesViewController.h"
 #import "MUColor.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 #import <MumbleKit/MKAudio.h>
@@ -26,7 +25,7 @@
     [super viewWillAppear:animated];
 
     self.title = NSLocalizedString(@"Advanced Audio", nil);
-    
+
     self.tableView.backgroundView = [MUBackgroundView backgroundView];
     
     if (@available(iOS 7, *)) {

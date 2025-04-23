@@ -8,7 +8,6 @@
 #import "MUDatabase.h"
 #import "MUFavouriteServer.h"
 #import "MUTableViewHeaderLabel.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 @interface MUFavouriteServerEditViewController () {
@@ -41,6 +40,7 @@
 
 + (void) configureTableViewConstraintWithCell:(UITableViewCell *)cell andTextField:(UITextField *)textField {
     [textField setTranslatesAutoresizingMaskIntoConstraints:NO];
+    //return;
 
     NSLayoutConstraint *top = [NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:[cell contentView] attribute:NSLayoutAttributeTop multiplier:1 constant:8];
     NSLayoutConstraint *bottom = [NSLayoutConstraint constraintWithItem:textField attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:[cell contentView] attribute:NSLayoutAttributeBottom multiplier:1 constant:-8];
@@ -60,7 +60,7 @@
         }
         
         CGRect textFieldRect = CGRectMake(110.0, 10.0, 185.0, 30.0);
-        
+
         _descriptionCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"MUFavouriteServerDescription"];
         [_descriptionCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [[_descriptionCell textLabel] setText:NSLocalizedString(@"Description", nil)];
@@ -193,7 +193,7 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+
     self.tableView.backgroundView = [MUBackgroundView backgroundView];
     
     if (@available(iOS 7, *)) {

@@ -2,16 +2,15 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+#import "MUCertificateViewController.h"
+
 @import CoreServices;
 
-#import "MUCertificateViewController.h"
 #import "MUTableViewHeaderLabel.h"
 #import "MUCertificateController.h"
 #import "MUCertificateChainBuilder.h"
 #import "MUColor.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
-
 #import <MumbleKit/MKCertificate.h>
 
 static const NSUInteger CertificateViewSectionSubject            = 0;
@@ -103,7 +102,7 @@ static const NSUInteger CertificateViewSectionTotal              = 4;
         _arrows.momentary = YES;
         [_arrows addTarget:self action:@selector(certificateSwitch:) forControlEvents:UIControlEventValueChanged];
     }
-    
+
     self.tableView.backgroundView = [MUBackgroundView backgroundView];
     
     if (@available(iOS 7, *)) {

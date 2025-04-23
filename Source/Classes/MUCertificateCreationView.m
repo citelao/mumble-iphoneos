@@ -6,7 +6,6 @@
 #import "MUCertificateCreationProgressView.h"
 #import "MUCertificateController.h"
 #import "MUColor.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 #import <MumbleKit/MKCertificate.h>
@@ -58,7 +57,7 @@ static void ShowAlertDialog(NSString *title, NSString *msg) {
         NSString *optional = NSLocalizedString(@"Optional", nil);
         
         CGRect textFieldRect = CGRectMake(110.0, 10.0, 185.0, 30.0);
-        
+
         _nameCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"MUFavouriteServerDescription"];
         [_nameCell setSelectionStyle:UITableViewCellSelectionStyleNone];
         [[_nameCell textLabel] setText:name];
@@ -113,7 +112,7 @@ static void ShowAlertDialog(NSString *title, NSString *msg) {
     NSString *newCert = NSLocalizedString(@"New Certificate",
                                           @"Title of MUCertificateCreationView (shown when creating a self-signed certificate)");
     [self setTitle:newCert];
-    
+
     self.tableView.backgroundView = [MUBackgroundView backgroundView];
     
     if (@available(iOS 7, *)) {

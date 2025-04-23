@@ -5,7 +5,6 @@
 #import "MUAudioQualityPreferencesViewController.h"
 #import "MUTableViewHeaderLabel.h"
 #import "MUColor.h"
-#import "MUImage.h"
 #import "MUBackgroundView.h"
 
 @implementation MUAudioQualityPreferencesViewController
@@ -21,7 +20,7 @@
     [super viewWillAppear:animated];
     
     self.title = NSLocalizedString(@"Audio Quality", nil);
-    
+
     self.tableView.backgroundView = [MUBackgroundView backgroundView];
     
     if (@available(iOS 7, *)) {

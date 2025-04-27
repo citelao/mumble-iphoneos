@@ -6,7 +6,6 @@
 
 #import "MUVoiceActivitySetupViewController.h"
 #import "MUTableViewHeaderLabel.h"
-#import "MUAudioBarViewCell.h"
 #import "MUColor.h"
 #import "MUBackgroundView.h"
 

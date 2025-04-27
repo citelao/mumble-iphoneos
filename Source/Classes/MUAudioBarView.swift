@@ -4,6 +4,7 @@
     
 
 import Foundation
+import UIKit
 
 @objc class MUAudioBarView : UIView {
     private var below: Float

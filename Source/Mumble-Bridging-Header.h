@@ -12,6 +12,7 @@
 
 #import <MumbleKit/MKServerPinger.h>
 #import <MumbleKit/MKUser.h>
+#import <MumbleKit/MKAudio.h>
 
 // Our own imports here
 

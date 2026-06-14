@@ -156,7 +156,7 @@
         }
         
         MUConnectionController *connCtrlr = [MUConnectionController sharedController];
-        [connCtrlr connetToHostname:[favServ hostName]
+        [connCtrlr connectToHostname:[favServ hostName]
                                port:[favServ port]
                             withUsername:userName
                         andPassword:[favServ password]

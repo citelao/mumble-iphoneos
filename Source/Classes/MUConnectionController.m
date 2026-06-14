@@ -63,7 +63,7 @@ NSString *MUConnectionClosedNotification = @"MUConnectionClosedNotification";
     return self;
 }
 
-- (void) connetToHostname:(NSString *)hostName port:(NSUInteger)port withUsername:(NSString *)userName andPassword:(NSString *)password withParentViewController:(UIViewController *)parentViewController {
+- (void) connectToHostname:(NSString *)hostName port:(NSUInteger)port withUsername:(NSString *)userName andPassword:(NSString *)password withParentViewController:(UIViewController *)parentViewController {
     _hostname = hostName;
     _port = port;
     _username = userName;

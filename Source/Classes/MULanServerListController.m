@@ -161,7 +161,7 @@ static NSInteger NetServiceAlphabeticalSort(id arg1, id arg2, void *reverse) {
                                                        style:UIAlertActionStyleDefault
                                                      handler:^(UIAlertAction * _Nonnull action) {
             MUConnectionController *connCtrlr = [MUConnectionController sharedController];
-            [connCtrlr connetToHostname:[netService hostName]
+            [connCtrlr connectToHostname:[netService hostName]
                                    port:[netService port]
                            withUsername:[[[alertCtrl textFields] objectAtIndex:0] text]
                             andPassword:nil

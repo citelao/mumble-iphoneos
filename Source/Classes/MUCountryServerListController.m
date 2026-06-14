@@ -151,7 +151,7 @@
                                                        style:UIAlertActionStyleDefault
                                                      handler: ^(UIAlertAction * _Nonnull action) {
             MUConnectionController *connCtrlr = [MUConnectionController sharedController];
-            [connCtrlr connetToHostname:[serverItem objectForKey:@"ip"]
+            [connCtrlr connectToHostname:[serverItem objectForKey:@"ip"]
                                    port:[[serverItem objectForKey:@"port"] intValue]
                            withUsername:[[[alertCtrl textFields] firstObject] text]
                             andPassword:nil

@@ -9,6 +9,7 @@
 #import "MUCertificateChainBuilder.h"
 #import "MUDatabase.h"
 #import "MUHorizontalFlipTransitionDelegate.h"
+#import "MUCallController.h"
 
 #import <MumbleKit/MKConnection.h>
 #import <MumbleKit/MKServerModel.h>
@@ -21,6 +22,7 @@ NSString *MUConnectionClosedNotification = @"MUConnectionClosedNotification";
     MKConnection               *_connection;
     MKServerModel              *_serverModel;
     MUServerRootViewController *_serverRoot;
+    MUCallController           *_callController;
     UIViewController           *_parentViewController;
     UIAlertController          *_alertCtrl;
     NSTimer                    *_timer;
@@ -124,6 +126,8 @@ NSString *MUConnectionClosedNotification = @"MUConnectionClosedNotification";
     [_serverModel addDelegate:self];
     
     _serverRoot = [[MUServerRootViewController alloc] initWithConnection:_connection andServerModel:_serverModel];
+    
+    _callController = [[MUCallController alloc] initWithConnection:_connection andServerModel:_serverModel];
     
     // Set the connection's client cert if one is set in the app's preferences...
     NSData *certPersistentId = [[NSUserDefaults standardUserDefaults] objectForKey:@"DefaultCertificate"];

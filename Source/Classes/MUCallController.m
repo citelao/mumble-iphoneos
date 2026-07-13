@@ -25,6 +25,11 @@
         _model = model;
         [_model addDelegate:self];
 
+        // MKServerModelDelegate has a serverModelDisconnected: callback, but MKServerModel
+        // is the messageHandler of MKConnection, not its delegate, so connection:closedWithError:
+        // (the only code path that fires serverModelDisconnected:) is never called by MKConnection.
+        // MUConnectionClosedNotification is posted unconditionally at the end of every teardown
+        // and is the reliable lifecycle event to use here.
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(connectionClosed:)
                                                      name:MUConnectionClosedNotification
@@ -53,7 +58,9 @@
 #pragma mark - MKServerModelDelegate
 
 - (void) serverModel:(MKServerModel *)model joinedServerAsUser:(MKUser *)user {
-    NSLog(@"Starting call - joined server as user: %@", user);
+    NSLog(@"Starting call - joined server as user: %@, host: %@, channel: %@", user, [model hostname], [user channel]);
+    
+    // TODO: name call
     CXHandle* handle = [[CXHandle alloc] initWithType:CXHandleTypeGeneric value:@"Test call"];
     _callUuid = [NSUUID UUID];
     CXStartCallAction* action = [[CXStartCallAction alloc] initWithCallUUID:_callUuid handle:handle];
@@ -115,6 +122,15 @@
 - (void)provider:(CXProvider *)provider performEndCallAction:(CXEndCallAction *)action {
     NSLog(@"CallKit performEndCallAction");
     [self disconnectCurrentCall];
+    [action fulfill];
+}
+
+- (void)provider:(CXProvider *)provider performSetMutedCallAction:(CXSetMutedCallAction *)action {
+    NSLog(@"CallKit requested mute: %@", [action isMuted] ? @"YES" : @"NO");
+
+    // Uniltarally clear deafened state; sorry!
+    [_model setSelfMuted:[action isMuted] andSelfDeafened:NO];
+    [action fulfill];
 }
 
 @end

@@ -71,8 +71,7 @@
     if (isRootChannel) {
         callName = [model hostname];
     } else {
-        // TODO: localize
-        callName = [NSString stringWithFormat:@"%@ on %@", [[user channel] channelName], [model hostname]];
+        callName = [NSString stringWithFormat:NSLocalizedString(@"%@ on %@", @"channel on hostname (CallKit call name)"), [[user channel] channelName], [model hostname]];
     }
 
     CXHandle* handle = [[CXHandle alloc] initWithType:CXHandleTypeGeneric value:callName];
@@ -81,8 +80,11 @@
     CXTransaction* transaction = [[CXTransaction alloc] initWithAction:action];
     
     [_cxCallController requestTransaction:transaction completion:^(NSError * _Nullable error) {
-        // TODO: handle error
-        NSLog(@"Requested transaction to start call with error: %@", error);
+        if (error != nil) {
+            NSLog(@"MUCallController: failed to start CallKit call: %@", error);
+            // Clear the UUID so connectionClosed: doesn't try to end a call that never started.
+            _callUuid = nil;
+        }
     }];
 }
 

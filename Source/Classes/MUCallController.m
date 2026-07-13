@@ -42,6 +42,8 @@
         cxConfig.maximumCallsPerCallGroup = 1;
         cxConfig.supportedHandleTypes = [NSSet setWithObject:[NSNumber numberWithInteger:CXHandleTypeGeneric]];
         
+        cxConfig.includesCallsInRecents = NO; // TODO: we might be able to support re-joining from the recents page, but not yet.
+        
         _cxProvider = [[CXProvider alloc] initWithConfiguration:cxConfig];
         [_cxProvider setDelegate:self queue:nil];
         
@@ -121,6 +123,13 @@
     
     [action fulfill];
     [provider reportOutgoingCallWithUUID:action.callUUID connectedAtDate:[NSDate date]];
+    
+    CXCallUpdate* callUpdate = [CXCallUpdate new];
+    callUpdate.supportsDTMF = NO; // No "Keypad"
+    callUpdate.supportsHolding = NO;
+    callUpdate.supportsGrouping = NO;
+    callUpdate.supportsUngrouping = NO;
+    [provider reportCallWithUUID:action.callUUID updated:callUpdate];
 }
 
 - (void)provider:(CXProvider *)provider didActivateAudioSession:(AVAudioSession *)audioSession {

@@ -296,8 +296,8 @@
     // For regular backgrounding, we usually don't turn off the audio system, and
     // we won't have to start it again.
     if (![[MKAudio sharedAudio] isRunning]) {
-        NSLog(@"MumbleApplicationDelegate: MKAudio not running. Starting it.");
-        [[MKAudio sharedAudio] start];
+//        NSLog(@"MumbleApplicationDelegate: MKAudio not running. Starting it.");
+//        [[MKAudio sharedAudio] start];
         
 #if ENABLE_REMOTE_CONTROL
         // Re-start the remote control server.

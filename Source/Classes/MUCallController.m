@@ -6,6 +6,7 @@
 #import "MUConnectionController.h"
 #import <CallKit/CallKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import <MumbleKit/MKAudio.h>
 
 @interface MUCallController () <MKServerModelDelegate, CXProviderDelegate> {
     MKConnection     *_connection;
@@ -124,10 +125,18 @@
 
 - (void)provider:(CXProvider *)provider didActivateAudioSession:(AVAudioSession *)audioSession {
     NSLog(@"CallKit didActivateAudioSession");
+    if (![[MKAudio sharedAudio] isRunning]) {
+        NSLog(@"MUCallController: MKAudio not running. Starting it.");
+        [[MKAudio sharedAudio] start];
+    } else {
+        NSLog(@"MUCallController: MKAudio running. RESTARTING it.");
+        [[MKAudio sharedAudio] restart];
+    }
 }
 
 - (void)provider:(CXProvider *)provider didDeactivateAudioSession:(AVAudioSession *)audioSession {
     NSLog(@"CallKit didDeactivateAudioSession");
+    [[MKAudio sharedAudio] stop];
 }
 
 - (void)provider:(CXProvider *)provider performEndCallAction:(CXEndCallAction *)action {

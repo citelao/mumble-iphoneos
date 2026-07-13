@@ -288,8 +288,9 @@
 }
 
 - (void) applicationDidBecomeActive:(UIApplication *)application {
-    // MKAudio lifecycle is managed by MUCallController via CallKit's
-    // didActivateAudioSession:/didDeactivateAudioSession: — no restart needed here.
+    // MKAudio is started and stopped by MUCallController in response to CallKit's
+    // didActivateAudioSession:/didDeactivateAudioSession: callbacks. Those fire reliably
+    // on foreground after interruptions, so no restart is needed here.
 #if ENABLE_REMOTE_CONTROL
     [[MURemoteControlServer sharedRemoteControlServer] stop];
     [[MURemoteControlServer sharedRemoteControlServer] start];

@@ -36,7 +36,6 @@
                                                      name:MUConnectionClosedNotification
                                                    object:nil];
 
-        // initWithLocalizedName: is deprecated in iOS 14; use init + localizedName property.
         CXProviderConfiguration* cxConfig = [[CXProviderConfiguration alloc] init];
         cxConfig.localizedName = @"Mumble";
         cxConfig.supportsVideo = NO;
@@ -115,9 +114,9 @@
 
     [provider reportOutgoingCallWithUUID:action.callUUID startedConnectingAtDate:[NSDate date]];
 
-    // CallKit requires us to configure the audio session here. This overrides whatever
-    // MKAudio configured internally (MKAudio uses the old AudioSession C API), so CallKit
-    // owns the session for the duration of the call.
+    // MKAudio manages its own AVAudioSession internally via the deprecated C AudioSession API.
+    // Reconfiguring it here before fulfilling the action lets CallKit's session activation
+    // (didActivateAudioSession:) win, so Bluetooth HFP and route switching work correctly.
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *error = nil;
 

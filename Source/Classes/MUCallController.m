@@ -24,7 +24,12 @@
         _connection = conn;
         _model = model;
         [_model addDelegate:self];
-        
+
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(connectionClosed:)
+                                                     name:MUConnectionClosedNotification
+                                                   object:nil];
+
         CXProviderConfiguration* cxConfig = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Mumble"];
         cxConfig.supportsVideo = NO;
         cxConfig.maximumCallGroups = 1;
@@ -60,15 +65,15 @@
     }];
 }
 
-- (void) serverModelDisconnected:(MKServerModel *)model {
-    // TODO: end the call
+- (void) connectionClosed:(NSNotification *)notification {
+    if (_callUuid == nil) {
+        return;
+    }
     NSLog(@"Disconnected from server, ending call");
-    
-    CXEndCallAction* action = [[CXEndCallAction alloc] initWithCallUUID:_callUuid];
-    CXTransaction* transaction = [[CXTransaction alloc] initWithAction:action];
-    
-    [_cxCallController requestTransaction:transaction completion:^(NSError * _Nullable error) {
-        // TODO: handle error
+    CXEndCallAction *action = [[CXEndCallAction alloc] initWithCallUUID:_callUuid];
+    _callUuid = nil;
+    CXTransaction *transaction = [[CXTransaction alloc] initWithAction:action];
+    [_cxCallController requestTransaction:transaction completion:^(NSError *error) {
         NSLog(@"Requested transaction to disconnect call with error: %@", error);
     }];
 }

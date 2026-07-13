@@ -58,10 +58,21 @@
 #pragma mark - MKServerModelDelegate
 
 - (void) serverModel:(MKServerModel *)model joinedServerAsUser:(MKUser *)user {
-    NSLog(@"Starting call - joined server as user: %@, host: %@, channel: %@", user, [model hostname], [user channel]);
+    NSLog(@"Starting call - joined server as user: %@, host: %@, channel: %@", user, [model hostname], [[user channel] channelName]);
     
-    // TODO: name call
-    CXHandle* handle = [[CXHandle alloc] initWithType:CXHandleTypeGeneric value:@"Test call"];
+    // Name:
+    //    @"{host}" if root
+    //    @"{channel} on {host}" otherwise
+    NSString *callName;
+    bool isRootChannel = [[user channel] parent] == nil;
+    if (isRootChannel) {
+        callName = [model hostname];
+    } else {
+        // TODO: localize
+        callName = [NSString stringWithFormat:@"%@ on %@", [[user channel] channelName], [model hostname]];
+    }
+
+    CXHandle* handle = [[CXHandle alloc] initWithType:CXHandleTypeGeneric value:callName];
     _callUuid = [NSUUID UUID];
     CXStartCallAction* action = [[CXStartCallAction alloc] initWithCallUUID:_callUuid handle:handle];
     CXTransaction* transaction = [[CXTransaction alloc] initWithAction:action];

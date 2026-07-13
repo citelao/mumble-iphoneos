@@ -114,7 +114,7 @@
 
     [session setCategory:AVAudioSessionCategoryPlayAndRecord
                     mode:AVAudioSessionModeVoiceChat
-                 options:AVAudioSessionCategoryOptionAllowBluetoothHFP
+                 options:AVAudioSessionCategoryOptionAllowBluetoothHFP | AVAudioSessionCategoryOptionDefaultToSpeaker
                    error:&error];
 
     NSLog(@"AVAudioSession config error: %@", error);

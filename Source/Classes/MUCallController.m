@@ -1,4 +1,4 @@
-// Copyright 2009-2010 The 'Mumble for iOS' Developers. All rights reserved.
+// Copyright 2009-2026 The 'Mumble for iOS' Developers. All rights reserved.
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
@@ -13,7 +13,7 @@
     MKServerModel    *_model;
     CXProvider       *_cxProvider;
     CXCallController *_cxCallController;
-    
+
     NSUUID           *_callUuid;
 }
 @end
@@ -36,17 +36,19 @@
                                                      name:MUConnectionClosedNotification
                                                    object:nil];
 
-        CXProviderConfiguration* cxConfig = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Mumble"];
+        // initWithLocalizedName: is deprecated in iOS 14; use init + localizedName property.
+        CXProviderConfiguration* cxConfig = [[CXProviderConfiguration alloc] init];
+        cxConfig.localizedName = @"Mumble";
         cxConfig.supportsVideo = NO;
         cxConfig.maximumCallGroups = 1;
         cxConfig.maximumCallsPerCallGroup = 1;
         cxConfig.supportedHandleTypes = [NSSet setWithObject:[NSNumber numberWithInteger:CXHandleTypeGeneric]];
-        
+
         cxConfig.includesCallsInRecents = NO; // TODO: we might be able to support re-joining from the recents page, but not yet.
-        
+
         _cxProvider = [[CXProvider alloc] initWithConfiguration:cxConfig];
         [_cxProvider setDelegate:self queue:nil];
-        
+
         _cxCallController = [[CXCallController alloc] init];
     }
     return self;
@@ -62,7 +64,7 @@
 
 - (void) serverModel:(MKServerModel *)model joinedServerAsUser:(MKUser *)user {
     NSLog(@"Starting call - joined server as user: %@, host: %@, channel: %@", user, [model hostname], [[user channel] channelName]);
-    
+
     // Name:
     //    @"{host}" if root
     //    @"{channel} on {host}" otherwise
@@ -78,7 +80,7 @@
     _callUuid = [NSUUID UUID];
     CXStartCallAction* action = [[CXStartCallAction alloc] initWithCallUUID:_callUuid handle:handle];
     CXTransaction* transaction = [[CXTransaction alloc] initWithAction:action];
-    
+
     [_cxCallController requestTransaction:transaction completion:^(NSError * _Nullable error) {
         if (error != nil) {
             NSLog(@"MUCallController: failed to start CallKit call: %@", error);
@@ -110,9 +112,12 @@
 
 - (void)provider:(CXProvider *)provider performStartCallAction:(CXStartCallAction *)action {
     NSLog(@"Perform start call");
-    
+
     [provider reportOutgoingCallWithUUID:action.callUUID startedConnectingAtDate:[NSDate date]];
-    
+
+    // CallKit requires us to configure the audio session here. This overrides whatever
+    // MKAudio configured internally (MKAudio uses the old AudioSession C API), so CallKit
+    // owns the session for the duration of the call.
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *error = nil;
 
@@ -122,10 +127,10 @@
                    error:&error];
 
     NSLog(@"AVAudioSession config error: %@", error);
-    
+
     [action fulfill];
     [provider reportOutgoingCallWithUUID:action.callUUID connectedAtDate:[NSDate date]];
-    
+
     CXCallUpdate* callUpdate = [CXCallUpdate new];
     callUpdate.supportsDTMF = NO; // No "Keypad"
     callUpdate.supportsHolding = NO;

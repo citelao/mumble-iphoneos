@@ -38,6 +38,7 @@
         // initWithLocalizedName: is deprecated in iOS 14; init reads the name from the app bundle.
         CXProviderConfiguration* cxConfig = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Mumble"];
 #endif
+        cxConfig.iconTemplateImageData = UIImagePNGRepresentation([UIImage imageNamed:@"MumbleCallKitIcon"]);
         cxConfig.supportsVideo = NO;
         cxConfig.maximumCallGroups = 1;
         cxConfig.maximumCallsPerCallGroup = 1;
@@ -68,9 +69,10 @@
 }
 
 - (void) disconnectCurrentCall {
-    // End the call!
-    [[MUConnectionController sharedController] disconnectFromServer];
+    // Clear before teardown so a re-entrant connectionClosed: sees nil and skips
+    // sending a redundant CXEndCallAction for a call CallKit is already ending.
     _callUuid = nil;
+    [[MUConnectionController sharedController] disconnectFromServer];
 }
 
 #pragma mark - MKServerModelDelegate
@@ -174,7 +176,12 @@
 
 - (void)provider:(CXProvider *)provider performEndCallAction:(CXEndCallAction *)action {
     NSLog(@"CallKit performEndCallAction");
-    [self disconnectCurrentCall];
+    // Guard: if _callUuid is nil the call was already torn down from our side
+    // (e.g. app-initiated disconnect). Calling disconnectCurrentCall here would
+    // tear down a new connection the user may have already started.
+    if (_callUuid != nil) {
+        [self disconnectCurrentCall];
+    }
     [action fulfill];
 }
 

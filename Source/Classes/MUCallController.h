@@ -6,5 +6,7 @@
 #import <MumbleKit/MKServerModel.h>
 
 @interface MUCallController : NSObject <MKServerModelDelegate>
-- (id) initWithConnection:(MKConnection *)conn andServerModel:(MKServerModel *)model;
+- (id) init;
+- (void) connectionEstablished:(MKConnection *)conn serverModel:(MKServerModel *)model;
+- (void) connectionTornDown;
 @end

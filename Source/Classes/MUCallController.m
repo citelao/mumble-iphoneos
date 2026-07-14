@@ -20,12 +20,8 @@
 
 @implementation MUCallController
 
-- (id) initWithConnection:(MKConnection *)conn andServerModel:(MKServerModel *)model {
+- (id) init {
     if ((self = [super init])) {
-        _connection = conn;
-        _model = model;
-        [_model addDelegate:self];
-
         // MKServerModelDelegate has a serverModelDisconnected: callback, but MKServerModel
         // is the messageHandler of MKConnection, not its delegate, so connection:closedWithError:
         // (the only code path that fires serverModelDisconnected:) is never called by MKConnection.
@@ -36,8 +32,12 @@
                                                      name:MUConnectionClosedNotification
                                                    object:nil];
 
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_14_0
         CXProviderConfiguration* cxConfig = [[CXProviderConfiguration alloc] init];
-        cxConfig.localizedName = @"Mumble";
+#else
+        // initWithLocalizedName: is deprecated in iOS 14; init reads the name from the app bundle.
+        CXProviderConfiguration* cxConfig = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Mumble"];
+#endif
         cxConfig.supportsVideo = NO;
         cxConfig.maximumCallGroups = 1;
         cxConfig.maximumCallsPerCallGroup = 1;
@@ -45,12 +45,26 @@
 
         cxConfig.includesCallsInRecents = NO; // TODO: we might be able to support re-joining from the recents page, but not yet.
 
+        // CXProvider must be created once per app lifetime. Recreating it on each reconnect
+        // causes CallKit to ignore subsequent CXStartCallActions.
         _cxProvider = [[CXProvider alloc] initWithConfiguration:cxConfig];
         [_cxProvider setDelegate:self queue:nil];
 
         _cxCallController = [[CXCallController alloc] init];
     }
     return self;
+}
+
+- (void) connectionEstablished:(MKConnection *)conn serverModel:(MKServerModel *)model {
+    _connection = conn;
+    _model = model;
+    [_model addDelegate:self];
+}
+
+- (void) connectionTornDown {
+    [_model removeDelegate:self];
+    _model = nil;
+    _connection = nil;
 }
 
 - (void) disconnectCurrentCall {
@@ -114,9 +128,13 @@
 
     [provider reportOutgoingCallWithUUID:action.callUUID startedConnectingAtDate:[NSDate date]];
 
-    // MKAudio manages its own AVAudioSession internally via the deprecated C AudioSession API.
-    // Reconfiguring it here before fulfilling the action lets CallKit's session activation
-    // (didActivateAudioSession:) win, so Bluetooth HFP and route switching work correctly.
+    // CallKit requires a configured AVAudioSession when starting a call; it
+    // activates the Session & hands it off via provider:didActivateAudioSession:.
+    // MKAudio does similar configuration, but it also starts the Session after
+    // that configuration, which breaks CallKit assumption. To avoid that, we 
+    // configure the Session here, let CallKit start it, and then initialize
+    // MKAudio *after* that Session is active. This has the effect of ignoring
+    // configuration done by MKAudio, so we aspire to keep the flags close here.
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *error = nil;
 

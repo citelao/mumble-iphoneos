@@ -225,6 +225,15 @@
 
 - (void)provider:(CXProvider *)provider performSetMutedCallAction:(CXSetMutedCallAction *)action {
     NSLog(@"CallKit requested mute: %@", [action isMuted] ? @"YES" : @"NO");
+    
+    // provider:performSetMutedCallAction: seems to be called twice for every
+    // tap of the mute button in the UX, so detect that & short-circuit here.
+    BOOL isNoop = [[_model connectedUser] isSelfMuted] == [action isMuted];
+    if (isNoop) {
+        NSLog(@"MUCallController: no-op, requested current mute state: %@", [action isMuted] ? @"YES" : @"NO");
+        [action fulfill];
+        return;
+    }
 
     // Uniltarally clear deafened state; sorry!
     [_model setSelfMuted:[action isMuted] andSelfDeafened:NO];

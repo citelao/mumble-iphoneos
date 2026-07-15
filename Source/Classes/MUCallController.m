@@ -75,22 +75,26 @@
     [[MUConnectionController sharedController] disconnectFromServer];
 }
 
-#pragma mark - MKServerModelDelegate
-
-- (void) serverModel:(MKServerModel *)model joinedServerAsUser:(MKUser *)user {
-    NSLog(@"Starting call - joined server as user: %@, host: %@, channel: %@", user, [model hostname], [[user channel] channelName]);
-
++ (NSString *) callNameForUser:(MKUser *)user andHostname:(NSString *)hostname {
     // Name:
     //    @"{host}" if root
     //    @"{channel} on {host}" otherwise
     NSString *callName;
     bool isRootChannel = [[user channel] parent] == nil;
     if (isRootChannel) {
-        callName = [model hostname];
+        callName = hostname;
     } else {
-        callName = [NSString stringWithFormat:NSLocalizedString(@"%@ on %@", @"channel on hostname (CallKit call name)"), [[user channel] channelName], [model hostname]];
+        callName = [NSString stringWithFormat:NSLocalizedString(@"%@ on %@", @"channel on hostname (CallKit call name)"), [[user channel] channelName], hostname];
     }
+    return callName;
+}
 
+#pragma mark - MKServerModelDelegate
+
+- (void) serverModel:(MKServerModel *)model joinedServerAsUser:(MKUser *)user {
+    NSLog(@"Starting call - joined server as user: %@, host: %@, channel: %@", user, [model hostname], [[user channel] channelName]);
+
+    NSString *callName = [self.class callNameForUser:user andHostname:[model hostname]];
     CXHandle* handle = [[CXHandle alloc] initWithType:CXHandleTypeGeneric value:callName];
     _callUuid = [NSUUID UUID];
     CXStartCallAction* action = [[CXStartCallAction alloc] initWithCallUUID:_callUuid handle:handle];
@@ -100,9 +104,41 @@
         if (error != nil) {
             NSLog(@"MUCallController: failed to start CallKit call: %@", error);
             // Clear the UUID so connectionClosed: doesn't try to end a call that never started.
-            _callUuid = nil;
+            self->_callUuid = nil;
         }
     }];
+}
+
+- (void) serverModel:(MKServerModel *)model userMoved:(MKUser *)user toChannel:(MKChannel *)chan fromChannel:(MKChannel *)prevChan byUser:(MKUser *)mover {
+    BOOL isConnectedUser = [_model connectedUser] == user;
+    if (!isConnectedUser) {
+        // We only care about the current user moving.
+        return;
+    }
+    
+    if (_callUuid != nil) {
+        NSLog(@"MUCallController: no call active, ignoring channel change");
+        return;
+    }
+    CXCallUpdate *callUpdate = [CXCallUpdate new];
+    callUpdate.localizedCallerName = [self.class callNameForUser:user andHostname:[model hostname]];
+    [_cxProvider reportCallWithUUID:_callUuid updated:callUpdate];
+}
+
+- (void) serverModel:(MKServerModel *)model channelRenamed:(MKChannel *)channel {
+    BOOL isConnectedUsersChannel = [[_model connectedUser] channel] == channel;
+    if (!isConnectedUsersChannel) {
+        // We only care about the current user's channel.
+        return;
+    }
+    
+    if (_callUuid != nil) {
+        NSLog(@"MUCallController: no call active, ignoring channel change");
+        return;
+    }
+    CXCallUpdate *callUpdate = [CXCallUpdate new];
+    callUpdate.localizedCallerName = [self.class callNameForUser:[_model connectedUser] andHostname:[model hostname]];
+    [_cxProvider reportCallWithUUID:_callUuid updated:callUpdate];
 }
 
 - (void) connectionClosed:(NSNotification *)notification {

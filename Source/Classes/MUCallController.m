@@ -69,6 +69,8 @@
 }
 
 - (void) disconnectCurrentCall {
+    NSLog(@"MUCallController: disconnecting current call");
+    
     // Clear before teardown so a re-entrant connectionClosed: sees nil and skips
     // sending a redundant CXEndCallAction for a call CallKit is already ending.
     _callUuid = nil;
@@ -116,7 +118,7 @@
         return;
     }
     
-    if (_callUuid != nil) {
+    if (_callUuid == nil) {
         NSLog(@"MUCallController: no call active, ignoring channel change");
         return;
     }
@@ -132,7 +134,7 @@
         return;
     }
     
-    if (_callUuid != nil) {
+    if (_callUuid == nil) {
         NSLog(@"MUCallController: no call active, ignoring channel change");
         return;
     }

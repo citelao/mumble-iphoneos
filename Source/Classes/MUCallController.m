@@ -264,6 +264,15 @@
 - (void)provider:(CXProvider *)provider performSetMutedCallAction:(CXSetMutedCallAction *)action {
     NSLog(@"MUCallController: CallKit requested mute: %@", [action isMuted] ? @"YES" : @"NO");
 
+    // Requesting mute from inside the app sends an update to CallKit, which
+    // calls this callback... Just detect this no-op and short-circuit.
+    BOOL isNoop = [[_model connectedUser] isSelfMuted] == [action isMuted];
+    if (isNoop) {
+        NSLog(@"MUCallController: CallKit requested mute is no-op");
+        [action fulfill];
+        return;
+    }
+    
     // provider:performSetMutedCallAction: seems to be called twice for every
     // tap of the mute button in the UX. So we only request a state update
     // once, then use an NSCondition to await that change for both calls.

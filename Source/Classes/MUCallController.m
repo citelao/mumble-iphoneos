@@ -15,6 +15,11 @@
     CXCallController *_cxCallController;
 
     NSUUID           *_callUuid;
+    
+    // When CallKit requests mute, use this to await the actual mute.
+    // CallKit seems to double-fire the request, so use a condition to
+    // let us await on both.
+    NSCondition      *_muteCondition;
 }
 @end
 
@@ -143,6 +148,39 @@
     [_cxProvider reportCallWithUUID:_callUuid updated:callUpdate];
 }
 
+- (void) serverModel:(MKServerModel *)model userSelfMuteDeafenStateChanged:(MKUser *)user {
+    if (user != [model connectedUser]) {
+        return;
+    }
+
+    NSLog(@"MUCallController: userSelfMuteDeafenStateChanged: muted=%@, deafened=%@", [user isSelfMuted] ? @"YES" : @"NO", [user isSelfDeafened] ? @"YES" : @"NO");
+    
+    // When CallKit requests a mute, we set up an NSCondition to track it.
+    // If that condition exists, signal it upon our mute.
+    //
+    // Note that CallKit mutes typically send *2* requests, but we only
+    // request a mute state change on the first call.
+    BOOL isCallKitInitiated = _muteCondition != nil;
+    if (isCallKitInitiated) {
+        NSLog(@"MUCallController: signalling CallKit-initiated mute-state change");
+        [_muteCondition lock];
+        [_muteCondition broadcast];
+        [_muteCondition unlock];
+        return;
+    }
+
+    // App-initiated mute change: push the new state to the CallKit call UI.
+    NSLog(@"MUCallController: posting app-initiated mute-state change");
+    CXSetMutedCallAction *action = [[CXSetMutedCallAction alloc] initWithCallUUID:_callUuid muted:[user isSelfMuted]];
+    [_cxCallController requestTransaction:[[CXTransaction alloc] initWithAction:action]
+                            completion:^(NSError *error) {
+        if (error != nil) {
+            NSLog(@"MUCallController: failed to sync mute state to CallKit: %@", error);
+        }
+    }];
+}
+
+
 - (void) connectionClosed:(NSNotification *)notification {
     if (_callUuid == nil) {
         return;
@@ -224,20 +262,44 @@
 }
 
 - (void)provider:(CXProvider *)provider performSetMutedCallAction:(CXSetMutedCallAction *)action {
-    NSLog(@"CallKit requested mute: %@", [action isMuted] ? @"YES" : @"NO");
-    
-    // provider:performSetMutedCallAction: seems to be called twice for every
-    // tap of the mute button in the UX, so detect that & short-circuit here.
-    BOOL isNoop = [[_model connectedUser] isSelfMuted] == [action isMuted];
-    if (isNoop) {
-        NSLog(@"MUCallController: no-op, requested current mute state: %@", [action isMuted] ? @"YES" : @"NO");
-        [action fulfill];
-        return;
-    }
+    NSLog(@"MUCallController: CallKit requested mute: %@", [action isMuted] ? @"YES" : @"NO");
 
-    // Uniltarally clear deafened state; sorry!
-    [_model setSelfMuted:[action isMuted] andSelfDeafened:NO];
-    [action fulfill];
+    // provider:performSetMutedCallAction: seems to be called twice for every
+    // tap of the mute button in the UX. So we only request a state update
+    // once, then use an NSCondition to await that change for both calls.
+    if (_muteCondition == nil)
+    {
+        _muteCondition = [[NSCondition alloc] init];
+
+        // Unilaterally clear deafened state; sorry!
+        [_model setSelfMuted:[action isMuted] andSelfDeafened:NO];
+    }
+    
+    // Await the condition change.
+    NSCondition *cond = _muteCondition;
+    dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^{
+        [cond lock];
+        
+        // The CXSetMutedCallAction itself seems to timeout (and auto-fail)
+        // around 6s, so finish much more generously.
+        const NSTimeInterval WAIT_DURATION_S = 3.0;
+        NSDate *deadline = [NSDate dateWithTimeIntervalSinceNow:WAIT_DURATION_S];
+        BOOL wasConditionSignalled = [cond waitUntilDate:deadline];
+        [cond unlock];
+        
+        // Succeed or fail the CXSetMutedCallAction appropriately.
+        dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"MUCallController: waited for condition, signalled: %@", wasConditionSignalled ? @"YES" : @"NO");
+            if (wasConditionSignalled) {
+                [action fulfill];
+            } else {
+                [action fail];
+            }
+            
+            // TODO: race?
+            self->_muteCondition = nil;
+       });
+    });
 }
 
 @end
